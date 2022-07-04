@@ -21,7 +21,7 @@ public class EmployeeTest {
     public Employee employee1;
     public Employee employee2;
     @BeforeEach
-    public void initEach() throws ComprimentoInvalidoException, EmailInvalidoException, ArquivoException {
+    public void initEach() throws ComprimentoInvalidoException, ArquivoException {
         employee1 = new Employee("Jose", "Silveira", "j.silveira@email.com");
         employee2 = null;
 
@@ -35,11 +35,15 @@ public class EmployeeTest {
 
         }
 
-        Employee.salvarEmployee(employee1);
+        try {
+            Employee.salvarEmployee(employee1);
+        } catch (EmailInvalidoException e) {
+            e.getMessage();
+        }
     }
 
     @Test
-    public void salvarEmployeeTest() throws ComprimentoInvalidoException, EmailInvalidoException, ArquivoException, EmployeeNaoEncontradoException {
+    public void salvarEmployeeTest() throws ComprimentoInvalidoException {
         employee2 = new Employee("João", "Silveira", "j.silveira@email.com");
 
         Exception emailException = assertThrows(EmailInvalidoException.class, () -> {
