@@ -1,5 +1,7 @@
-package com.ciandt.feedfront.employee;
+package com.ciandt.feedfront.models;
 
+import com.ciandt.feedfront.controllers.EmployeeController;
+import com.ciandt.feedfront.dao.EmployeeDAO;
 import com.ciandt.feedfront.excecoes.ArquivoException;
 import com.ciandt.feedfront.excecoes.ComprimentoInvalidoException;
 import com.ciandt.feedfront.excecoes.EmailInvalidoException;
@@ -16,19 +18,21 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Employee implements Serializable {
+
+    private static final long serialVersionID = 1;
     private String id;
     private String nome;
     private String sobrenome;
     private String email;
-    private String arquivo; //TODO: alterar de acordo com a sua implementação
-    private static final String repositorioPath = "src/main/resources/data/employee/"; //TODO: alterar de acordo com a sua implementação
+    private String arquivo;
 
-    private static final long serialVersionID = 1;
+    private EmployeeController employeeController;
 
 
     public Employee(String nome, String sobrenome, String email) throws ComprimentoInvalidoException {
         this.id = UUID.randomUUID().toString();
-        this.arquivo = repositorioPath + getId() + ".byte";
+        this.arquivo = getId() + ".byte";
+        this.employeeController = new EmployeeController();
 
         setNome(nome);
         setEmail(email);
@@ -84,7 +88,7 @@ public class Employee implements Serializable {
         List<Employee> employees = new ArrayList<>();
 
         try {
-            Stream<Path> paths = Files.walk(Paths.get(repositorioPath));
+            Stream<Path> paths = Files.walk(Paths.get(EmployeeDAO.getRepositorioPath()));
 
             List<String> files = paths
                     .map(p -> p.getFileName().toString())
@@ -96,7 +100,7 @@ public class Employee implements Serializable {
                 try {
                     employees.add(buscarEmployee(file));
                 } catch (EmployeeNaoEncontradoException e) {
-                    // Exception silenciada porque sei que não chegará aqui
+                    e.getMessage();
                 }
             }
 
@@ -113,7 +117,7 @@ public class Employee implements Serializable {
         ObjectInputStream inputStream;
 
         try {
-            inputStream = getInputStream(repositorioPath + id + ".byte");
+            inputStream = getInputStream(EmployeeDAO.getRepositorioPath() + id + ".byte");
             employee = (Employee) inputStream.readObject();
 
             inputStream.close();
@@ -131,7 +135,7 @@ public class Employee implements Serializable {
     public static void apagarEmployee(String id) throws ArquivoException, EmployeeNaoEncontradoException {
         buscarEmployee(id);
 
-        new File(String.format("%s%s.byte", repositorioPath, id)).delete();
+        new File(String.format("%s%s.byte", EmployeeDAO.getRepositorioPath(), id)).delete();
     }
 
     @Override
@@ -160,6 +164,7 @@ public class Employee implements Serializable {
     }
 
     public void setNome(String nome) throws ComprimentoInvalidoException {
+
         if (nome.length() < 3) {
             throw new ComprimentoInvalidoException("Comprimento do nome deve ser maior que 2 caracteres.");
         }
@@ -172,6 +177,7 @@ public class Employee implements Serializable {
     }
 
     public void setSobrenome(String sobrenome) throws ComprimentoInvalidoException {
+
         if (sobrenome.length() < 3) {
             throw new ComprimentoInvalidoException("Comprimento do sobrenome deve ser maior que 2 caracteres.");
         }
@@ -191,4 +197,16 @@ public class Employee implements Serializable {
         return id;
     }
 
+    public String getArquivo() {
+        return arquivo;
+    }
+
+    public EmployeeController getEmployeeController() {
+        return employeeController;
+    }
+
+    @Override
+    public String toString() {
+        return getNome() + " " + getSobrenome() + " - " + getEmail();
+    }
 }
