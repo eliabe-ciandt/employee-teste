@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface Service<E> {
 
-    List<E> listar() throws ArquivoException, BusinessException, EntidadeNaoSerializavelException;
-    E buscar(String id) throws ArquivoException, BusinessException, EmployeeNaoEncontradoException, EntidadeNaoSerializavelException;
-    E salvar(E e) throws ArquivoException, BusinessException, EmailInvalidoException, EntidadeNaoSerializavelException;
-    E atualizar(E e) throws ArquivoException, BusinessException, EmployeeNaoEncontradoException, EmailInvalidoException, EntidadeNaoSerializavelException;
-    void apagar(String id) throws ArquivoException, BusinessException, EmployeeNaoEncontradoException, EntidadeNaoSerializavelException;
+    List<E> listar() throws ArquivoException;
+    E buscar(String id) throws ArquivoException, BusinessException;
+    E salvar(E e) throws ArquivoException, BusinessException;
+    E atualizar(E e) throws ArquivoException, BusinessException;
+    void apagar(String id) throws ArquivoException, BusinessException;
 }

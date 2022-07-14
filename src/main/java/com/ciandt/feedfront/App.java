@@ -1,5 +1,7 @@
 package com.ciandt.feedfront;
 
+import com.ciandt.feedfront.controllers.EmployeeController;
+import com.ciandt.feedfront.controllers.FeedbackController;
 import com.ciandt.feedfront.excecoes.*;
 import com.ciandt.feedfront.models.Employee;
 
@@ -11,6 +13,7 @@ public class App
 {
     public static void main( String[] args ) throws ComprimentoInvalidoException, EmailInvalidoException, ArquivoException, EmployeeNaoEncontradoException {
 
+        EmployeeController employeeController = new EmployeeController();
         Employee novoEmployee1 = new Employee("Joao","Santos","joaosantos@mail.com");
         Employee novoEmployee2 = new Employee("Maria","Duarte","mariaduarte@mail.com");
         Employee novoEmployee3 = new Employee("Matheus","Cavalcante","matheuscavalcante@mail.com");
@@ -20,26 +23,22 @@ public class App
 
         System.out.println("-------------------------------");
         try {
-            try {
-                novoEmployee1.getEmployeeController().salvar(novoEmployee1);
-                novoEmployee2.getEmployeeController().salvar(novoEmployee2);
-                novoEmployee3.getEmployeeController().salvar(novoEmployee3);
-                novoEmployee4.getEmployeeController().salvar(novoEmployee4);
-                novoEmployee5.getEmployeeController().salvar(novoEmployee5);
-                novoEmployee6.getEmployeeController().salvar(novoEmployee6);
-                System.out.println("Criacao de Employee feito com sucesso!");
-            } catch (BusinessException e) {
-                System.out.println("Deu ruim");
-            } catch (EntidadeNaoSerializavelException e) {
-                e.getCause();
-            }
-        } catch (EmailInvalidoException | ArquivoException ex) {
-            ex.getCause();
+            employeeController.salvar(novoEmployee1);
+            employeeController.salvar(novoEmployee2);
+            employeeController.salvar(novoEmployee3);
+            employeeController.salvar(novoEmployee4);
+            employeeController.salvar(novoEmployee5);
+            employeeController.salvar(novoEmployee6);
+            System.out.println("Criacao de Employee feito com sucesso!");
+        } catch (BusinessException e) {
+            System.out.println("Deu ruim");
+        } catch (EntidadeNaoSerializavelException e) {
+            e.getCause();
         }
         System.out.println("-------------------------------");
         System.out.println("Lista de Employees:");
         try {
-            novoEmployee1.getEmployeeController().listar().forEach(employee -> System.out.println(employee.toString()));
+            employeeController.listar().forEach(employee -> System.out.println(employee.toString()));
         } catch (BusinessException e) {
             e.getMessage();
         } catch (EntidadeNaoSerializavelException e) {
@@ -50,10 +49,12 @@ public class App
 
         try {
             System.out.println("Busca com Employee com id: " + novoEmployee1.getId());
-            System.out.println(Employee.buscarEmployee(novoEmployee1.getId()).toString());
+            System.out.println(employeeController.buscar(novoEmployee1.getId()).toString());
 
         } catch (EmployeeNaoEncontradoException | ArquivoException ex) {
             System.out.println(ex.getMessage());
+        } catch (BusinessException e) {
+            e.getMessage();
         }
 
         System.out.println("-------------------------------");
@@ -61,7 +62,7 @@ public class App
             novoEmployee1.setNome("Jose");
             novoEmployee1.setSobrenome("da Silva");
 
-            Employee atualizaEmployee = novoEmployee2.getEmployeeController().salvar(novoEmployee1);
+            Employee atualizaEmployee = employeeController.salvar(novoEmployee1);
             System.out.println("Employee Atualizado: "+ atualizaEmployee.toString());
         } catch (EmailInvalidoException | ArquivoException ex) {
             System.out.println(ex.getMessage());
@@ -73,9 +74,9 @@ public class App
 
         System.out.println("-------------------------------");
         try {
-            novoEmployee2.getEmployeeController().apagar(novoEmployee1.getId());
+            employeeController.apagar(novoEmployee1.getId());
             System.out.println("Cadastro Deletado com sucesso!");
-        } catch (EmployeeNaoEncontradoException | BusinessException ex) {
+        } catch (BusinessException ex) {
             System.out.println(ex.getMessage());
         } catch (EntidadeNaoSerializavelException e) {
             e.getCause();
