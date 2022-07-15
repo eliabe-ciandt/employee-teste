@@ -1,21 +1,9 @@
 package com.ciandt.feedfront.models;
 
-import com.ciandt.feedfront.controllers.EmployeeController;
-import com.ciandt.feedfront.dao.EmployeeDAO;
-import com.ciandt.feedfront.excecoes.ArquivoException;
 import com.ciandt.feedfront.excecoes.ComprimentoInvalidoException;
-import com.ciandt.feedfront.excecoes.EmailInvalidoException;
-import com.ciandt.feedfront.excecoes.EmployeeNaoEncontradoException;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Employee implements Serializable {
 

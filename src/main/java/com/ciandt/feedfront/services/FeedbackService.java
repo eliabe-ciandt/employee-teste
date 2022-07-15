@@ -3,6 +3,7 @@ package com.ciandt.feedfront.services;
 import com.ciandt.feedfront.dao.FeedbackDAO;
 import com.ciandt.feedfront.excecoes.ArquivoException;
 import com.ciandt.feedfront.excecoes.BusinessException;
+import com.ciandt.feedfront.excecoes.EntidadeNaoEncontradaException;
 import com.ciandt.feedfront.interfaces.Service;
 import com.ciandt.feedfront.models.Feedback;
 
@@ -29,12 +30,18 @@ public class FeedbackService implements Service<Feedback> {
 
     @Override
     public Feedback buscar(String id) throws ArquivoException, BusinessException {
+        Feedback feedbackEncontrado = null;
         try {
-            Feedback feedbackEncontrado = feedbackDAO.buscar(id);
-            return feedbackEncontrado;
+            feedbackEncontrado = feedbackDAO.buscar(id);
         } catch (IOException e) {
             throw new ArquivoException(e);
         }
+
+        if(feedbackEncontrado == null) {
+            throw new EntidadeNaoEncontradaException("Feedback nao encontrado");
+        }
+
+        return feedbackEncontrado;
     }
 
     @Override

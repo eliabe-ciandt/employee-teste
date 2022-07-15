@@ -1,7 +1,6 @@
 package com.ciandt.feedfront;
 
 import com.ciandt.feedfront.controllers.EmployeeController;
-import com.ciandt.feedfront.controllers.FeedbackController;
 import com.ciandt.feedfront.excecoes.*;
 import com.ciandt.feedfront.models.Employee;
 
@@ -11,7 +10,7 @@ import com.ciandt.feedfront.models.Employee;
  */
 public class App
 {
-    public static void main( String[] args ) throws ComprimentoInvalidoException, EmailInvalidoException, ArquivoException, EmployeeNaoEncontradoException {
+    public static void main( String[] args ) throws ComprimentoInvalidoException, EmailInvalidoException, ArquivoException, EntidadeNaoEncontradaException {
 
         EmployeeController employeeController = new EmployeeController();
         Employee novoEmployee1 = new Employee("Joao","Santos","joaosantos@mail.com");
@@ -51,7 +50,7 @@ public class App
             System.out.println("Busca com Employee com id: " + novoEmployee1.getId());
             System.out.println(employeeController.buscar(novoEmployee1.getId()).toString());
 
-        } catch (EmployeeNaoEncontradoException | ArquivoException ex) {
+        } catch (EntidadeNaoEncontradaException | ArquivoException ex) {
             System.out.println(ex.getMessage());
         } catch (BusinessException e) {
             e.getMessage();
